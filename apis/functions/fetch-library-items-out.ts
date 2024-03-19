@@ -69,7 +69,7 @@ const loginToLibrary = async () => {
   const $ = cheerio.load(htmlRes);
   const itemsOutTable = $("#gridviewItemsOut");
   // console.log(itemsOutTable.html());
-  const items = [];
+  const items: any[] = [];
 
   $(
     "tr.patron-account__grid-row, tr.patron-account__grid-alternating-row"
