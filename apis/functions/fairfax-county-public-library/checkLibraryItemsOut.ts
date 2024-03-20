@@ -10,15 +10,7 @@ export async function checkLibraryItemsOut(): Promise<any> {
   console.table(itemsOutInDatabase);
 
   //upsert the items found
-  for (const item of currentItemsOut) {
-    const linkDetailsResonse = await fetch(item.linkDetails)
-      .then((res) => {
-        // console.log(res);
-        console.log(res.buffer());
-      })
-      .catch(console.error);
-    console.log(JSON.stringify(linkDetailsResonse, null, 2));
-
+  for (const item of currentItemsOut.slice(0, 1)) {
     await db
       .insert(schema.booksOut)
       .values({

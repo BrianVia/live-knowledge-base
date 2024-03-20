@@ -1,42 +1,8 @@
 import { FairfaxCountLibraryItemOut } from "./types";
 
-const puppeteer = require("puppeteer");
-const cheerio = require("cheerio");
+import puppeteer from "puppeteer";
+import cheerio from "cheerio";
 require("dotenv").config();
-
-const getLibraryItemsOutHtml = async () => {
-  const htmlRes = await fetch(
-    "https://fcplcat.fairfaxcounty.gov/patronaccount/itemsout.aspx?ctx=1.1033.0.0.1",
-    {
-      headers: {
-        accept:
-          "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-        "accept-language": "en-US,en;q=0.9",
-        "cache-control": "max-age=0",
-        "sec-ch-ua": '"Chromium";v="119", "Not?A_Brand";v="24"',
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": '"macOS"',
-        "sec-fetch-dest": "document",
-        "sec-fetch-mode": "navigate",
-        "sec-fetch-site": "same-origin",
-        "sec-fetch-user": "?1",
-        "upgrade-insecure-requests": "1",
-        cookie:
-          "ASP.NET_SessionId=jwyb4ff0tiqyxfgrq4wydqzd; OrgID=1; SameSite=None",
-        Referer:
-          "https://fcplcat.fairfaxcounty.gov/patronaccount/itemsout.aspx?ctx=1.1033.0.0.1",
-        "Referrer-Policy": "strict-origin-when-cross-origin",
-      },
-      body: null,
-      method: "GET",
-    }
-  ).then((res) => res.text());
-
-  console.log(htmlRes);
-
-  // Parse the HTML using Cheerio
-  const $ = cheerio.load(htmlRes);
-};
 
 export const getLibraryItemsOut = async (): Promise<
   FairfaxCountLibraryItemOut[]
@@ -56,10 +22,10 @@ export const getLibraryItemsOut = async (): Promise<
   await page.waitForSelector("#textboxPassword");
 
   // Type the username into the username field
-  await page.type("#textboxBarcodeUsername", username);
+  await page.type("#textboxBarcodeUsername", username!);
 
   // Type the password into the password field
-  await page.type("#textboxPassword", password);
+  await page.type("#textboxPassword", password!);
 
   // If there's a login button you can click it like this:
   await page.click("#buttonSubmit");
@@ -94,9 +60,10 @@ export const getLibraryItemsOut = async (): Promise<
     const coverImageUrl = $(element)
       .find(".patron-account__grid-cell--cover-image img")
       .attr("src");
+
     const linkDetails = $(element)
       .find(".patron-account__grid-cell--full-narrow.text-center a")
-      .attr("href")
+      .attr("href")!
       .replace("javascript:showModalBasic('", "")
       .replace("')", "");
 
@@ -106,7 +73,7 @@ export const getLibraryItemsOut = async (): Promise<
       renewalsLeft: parseInt(renewalsLeft),
       callNumber,
       assignedBranch,
-      coverImageUrl,
+      coverImageUrl: coverImageUrl ?? "",
       linkDetails,
     });
   });

@@ -7,7 +7,7 @@ const port = 8080;
 
 cron.schedule("* * * * *", () => {
   console.log("Running a task every day at midnight");
-  checkLibraryItemsOut();
+  //   checkLibraryItemsOut();
 });
 
 app.get("/", (req: request, res: response) => {
@@ -16,4 +16,5 @@ app.get("/", (req: request, res: response) => {
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}...`);
+  checkLibraryItemsOut();
 });
