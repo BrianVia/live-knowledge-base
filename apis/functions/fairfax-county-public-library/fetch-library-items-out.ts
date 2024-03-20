@@ -1,8 +1,10 @@
+import { FairfaxCountLibraryItemOut } from "./types";
+
 const puppeteer = require("puppeteer");
 const cheerio = require("cheerio");
 require("dotenv").config();
 
-const getLibraryItemsOut = async () => {
+const getLibraryItemsOutHtml = async () => {
   const htmlRes = await fetch(
     "https://fcplcat.fairfaxcounty.gov/patronaccount/itemsout.aspx?ctx=1.1033.0.0.1",
     {
@@ -36,7 +38,9 @@ const getLibraryItemsOut = async () => {
   const $ = cheerio.load(htmlRes);
 };
 
-const loginToLibrary = async () => {
+export const getLibraryItemsOut = async (): Promise<
+  FairfaxCountLibraryItemOut[]
+> => {
   const browser = await puppeteer.launch({ headless: true }); // Set headless: true if you don't need a browser UI
   const page = await browser.newPage();
   await page.goto("https://fcplcat.fairfaxcounty.gov/logon.aspx?header=1", {
@@ -69,7 +73,7 @@ const loginToLibrary = async () => {
   const $ = cheerio.load(htmlRes);
   const itemsOutTable = $("#gridviewItemsOut");
   // console.log(itemsOutTable.html());
-  const items: any[] = [];
+  const items: FairfaxCountLibraryItemOut[] = [];
 
   $(
     "tr.patron-account__grid-row, tr.patron-account__grid-alternating-row"
@@ -92,12 +96,14 @@ const loginToLibrary = async () => {
       .attr("src");
     const linkDetails = $(element)
       .find(".patron-account__grid-cell--full-narrow.text-center a")
-      .attr("href");
+      .attr("href")
+      .replace("javascript:showModalBasic('", "")
+      .replace("')", "");
 
     items.push({
       title,
-      dueDate,
-      renewalsLeft,
+      dueDate: new Date(dueDate),
+      renewalsLeft: parseInt(renewalsLeft),
       callNumber,
       assignedBranch,
       coverImageUrl,
@@ -105,13 +111,7 @@ const loginToLibrary = async () => {
     });
   });
 
-  console.log(JSON.stringify(items, null, 2));
-
-  browser.close();
+  await browser.close();
 
   return items;
-
-  // Uncomment the line below if you want to close the browser after the script
-  // await browser.close();
 };
-loginToLibrary();
