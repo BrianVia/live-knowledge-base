@@ -4,7 +4,7 @@ import puppeteer from "puppeteer";
 import cheerio from "cheerio";
 require("dotenv").config();
 
-export const getLibraryItemsOut = async (): Promise<
+export const fetchLibraryItemsOut = async (): Promise<
   FairfaxCountLibraryItemOut[]
 > => {
   const browser = await puppeteer.launch({ headless: true }); // Set headless: true if you don't need a browser UI

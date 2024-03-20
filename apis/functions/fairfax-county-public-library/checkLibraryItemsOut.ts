@@ -1,9 +1,9 @@
-import { getLibraryItemsOut } from "./fetch-library-items-out";
+import { fetchLibraryItemsOut } from "./fetch-library-items-out";
 import { db } from "../../../database/db";
 import * as schema from "../../../database/schema";
 
 export async function checkLibraryItemsOut(): Promise<any> {
-  const currentItemsOut = await getLibraryItemsOut();
+  const currentItemsOut = await fetchLibraryItemsOut();
   console.table(currentItemsOut);
 
   const itemsOutInDatabase = await db.select().from(schema.booksOut);
