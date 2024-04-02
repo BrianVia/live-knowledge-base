@@ -4,7 +4,7 @@ import { checkLibraryItemsOut } from "./apis/functions/fairfax-county-public-lib
 import { libraryRouter } from "./apis/functions/fairfax-county-public-library/router";
 
 const app = express();
-const port = 8080;
+const port = 3000;
 
 cron.schedule("0 0 * * *", () => {
   console.log("Running a task every day at midnight");
