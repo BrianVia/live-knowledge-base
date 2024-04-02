@@ -19,11 +19,11 @@ RUN cd /temp/prod && bun install --frozen-lockfile --production
 # then copy all (non-ignored) project files into the image
 FROM base AS prerelease
 COPY --from=install /temp/dev/node_modules node_modules
-COPY . .
+COPY ./build .
 
 # [optional] tests & build
 ENV NODE_ENV=production
-# RUN bun run build
+RUN bun build --entrypoints ./server.ts --outdir ./build --target=bun
 
 # copy production dependencies and source code into final image
 FROM base AS release

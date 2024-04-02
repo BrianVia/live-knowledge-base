@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "bun-types": "^1.0.33",
-    "drizzle-kit": "^0.20.14"
+    "drizzle-kit": "^0.20.14",
+    "typescript": "^5.4.3"
   }
 }
